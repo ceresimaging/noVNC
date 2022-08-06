@@ -232,6 +232,7 @@ export default class RFB extends EventTargetMixin {
 
         this._clipboard = new Clipboard(this._canvas);
         this._clipboard.onpaste = this.clipboardPasteFrom.bind(this);
+        this._clipboard.onpasteTTY = this.clipboardPasteToTTY.bind(this);
 
         this._keyboard = new Keyboard(this._canvas);
         this._keyboard.onkeyevent = this._handleKeyEvent.bind(this);
@@ -442,6 +443,20 @@ export default class RFB extends EventTargetMixin {
 
     blur() {
         this._canvas.blur();
+    }
+
+    clipboardPasteToTTY(text) {
+        if (this._rfbConnectionState !== 'connected' || this._viewOnly) { return; }
+
+        // fixing ctrl-pressed or shift-pressed
+        this.sendKey(KeyTable.XK_Control_L, "ControlLeft", false);
+        this.sendKey(KeyTable.XK_Control_R, "ControlRight", false);
+        this.sendKey(KeyTable.XK_Shift_L, "ShiftLeft", false);
+        this.sendKey(KeyTable.XK_Shift_R, "ShiftRight", false);
+
+        for (let i = 0; i < text.length; i++) {
+             this._canvas.dispatchEvent(new KeyboardEvent('keydown', {'key': text.charAt(i)}));
+        }
     }
 
     clipboardPasteFrom(text) {
