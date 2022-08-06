@@ -43,7 +43,7 @@ export default class Clipboard {
 
     grab() {
         if (!Clipboard.isSupported) return;
-        this._target.addEventListener('copy', this._eventHandlers.copy );
+        this._target.addEventListener('copy', this._eventHandlers.copy);
         this._target.addEventListener('paste', this._eventHandlers.paste);
         this._target.addEventListener('keydown', this._eventHandlers.keydown);
     }
