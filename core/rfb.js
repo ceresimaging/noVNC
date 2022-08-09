@@ -454,8 +454,21 @@ export default class RFB extends EventTargetMixin {
         this.sendKey(KeyTable.XK_Shift_L, "ShiftLeft", false);
         this.sendKey(KeyTable.XK_Shift_R, "ShiftRight", false);
 
-        for (let i = 0; i < text.length; i++) {
-             this._canvas.dispatchEvent(new KeyboardEvent('keydown', {'key': text.charAt(i)}));
+        let data = [];
+        for (let i = text.length - 1; i >= 0; i--) {
+             data.push(text.charAt(i));
+        }
+        let rfb = this;
+        setTimeout (_sendArray, 0, data);
+
+        function _sendArray (data) {
+            let c = data.pop();
+            if ( c !== 'undefined') {
+               rfb._canvas.dispatchEvent(new KeyboardEvent('keydown', {'key': c}));
+               if (data.length > 0) {
+                 setTimeout (_sendArray, 100, data);
+               }
+            }
         }
     }
 
