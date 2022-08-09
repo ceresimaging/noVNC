@@ -18,13 +18,13 @@ export default class Clipboard {
 
     _handleCopy(e) {
         if (navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(e.clipboardData.getData('text/plain')).catch(() => {});
+            navigator.clipboard.writeText(e.clipboardData.getData('text/plain')).catch(() => {/* Do nothing */});
         }
     }
 
     _handlePaste(e) {
         if (navigator.clipboard.readText) {
-            navigator.clipboard.readText().then((clipText) => this.onpaste(clipText)).catch(() => {});
+            navigator.clipboard.readText().then((clipText) => this.onpaste(clipText)).catch(() => {/* Do nothing */});
         } else if (e.clipboardData) {
             this.onpaste(e.clipboardData.getData('text/plain'));
         }
@@ -34,7 +34,7 @@ export default class Clipboard {
         if (e.ctrlKey && e.which === 86 /* ctrl-v */ || e.shiftKey && e.which === 45 /* shift-Ins */) {
             e.preventDefault();
             if (navigator.clipboard.readText) {
-                navigator.clipboard.readText().then((clipText) => this.onpasteTTY(clipText)).catch(() => {});
+                navigator.clipboard.readText().then((clipText) => this.onpasteTTY(clipText)).catch(() => {/* Do nothing */});
             }
         }
     }

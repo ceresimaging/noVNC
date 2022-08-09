@@ -464,10 +464,33 @@ export default class RFB extends EventTargetMixin {
         function _sendArray (data) {
             let c = data.pop();
             if ( c !== 'undefined') {
-               rfb._canvas.dispatchEvent(new KeyboardEvent('keydown', {'key': c}));
-               if (data.length > 0) {
-                 setTimeout (_sendArray, 100, data);
-               }
+                _sendChar (c);
+                if (data.length > 0) {
+                    setTimeout (_sendArray, 50, data);
+                }
+            }
+        }
+        function _sendChar (c) {
+            // special char processing, see https://github.com/sibson/vncdotool
+            if (c === '\r') {
+               return;
+            }
+            if (c === '\n') {
+                rfb.sendKey(KeyTable.XK_Return, "Enter");
+                return;
+            }
+            if (c === '\t') {
+                rfb.sendKey(KeyTable.XK_Tab, "Tab");
+                return;
+            }
+
+            let isSpecial = '~!@#$%^&*()_+{}|:"<>?'.includes(c);
+            if (isSpecial) {
+                rfb.sendKey(KeyTable.XK_Shift_L, "ShiftLeft", true);
+            }
+            rfb._canvas.dispatchEvent(new KeyboardEvent('keydown', {'key': c}));
+            if (isSpecial) {
+                rfb.sendKey(KeyTable.XK_Shift_L, "ShiftLeft", false);
             }
         }
     }
