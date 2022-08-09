@@ -24,17 +24,17 @@ export default class Clipboard {
 
     _handlePaste(e) {
         if (navigator.clipboard.readText) {
-            navigator.clipboard.readText().then((clipText) => this.onpaste(clipText)).catch(() => {/* Do nothing */});
+            navigator.clipboard.readText().then((clipText) => {this.onpaste(clipText);}).catch(() => {/* Do nothing */});
         } else if (e.clipboardData) {
             this.onpaste(e.clipboardData.getData('text/plain'));
         }
     }
 
-    _handleKeyDown (e) {
+    _handleKeyDown(e) {
         if (e.ctrlKey && e.which === 86 /* ctrl-v */ || e.shiftKey && e.which === 45 /* shift-Ins */) {
             e.preventDefault();
             if (navigator.clipboard.readText) {
-                navigator.clipboard.readText().then((clipText) => this.onpasteTTY(clipText)).catch(() => {/* Do nothing */});
+                navigator.clipboard.readText().then((clipText) => {this.onpasteTTY(clipText);}).catch(() => {/* Do nothing */});
             }
         }
     }

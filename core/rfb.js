@@ -456,24 +456,24 @@ export default class RFB extends EventTargetMixin {
 
         let data = [];
         for (let i = text.length - 1; i >= 0; i--) {
-             data.push(text.charAt(i));
+            data.push(text.charAt(i));
         }
         let rfb = this;
-        setTimeout (_sendArray, 0, data);
+        setTimeout(_sendArray, 0, data);
 
-        function _sendArray (data) {
+        function _sendArray(data) {
             let c = data.pop();
             if ( c !== 'undefined') {
-                _sendChar (c);
+                _sendChar(c);
                 if (data.length > 0) {
-                    setTimeout (_sendArray, 50, data);
+                    setTimeout(_sendArray, 50, data);
                 }
             }
         }
-        function _sendChar (c) {
+        function _sendChar(c) {
             // special char processing, see https://github.com/sibson/vncdotool
             if (c === '\r') {
-               return;
+                return;
             }
             if (c === '\n') {
                 rfb.sendKey(KeyTable.XK_Return, "Enter");
